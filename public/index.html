@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitLab Agentic Auditor — Hackathon Agent</title>
+    <meta name="description" content="Autonomous AI Agent for Code Auditing, Security Analysis & Issue Resolution powered by Gemini 3.5 Flash & GitLab Partner MCP Server">
+    <!-- Google Fonts: Outfit e Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Markdown Parser (Marked) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="logo">
+                <i class="fa-brands fa-gitlab glow-icon"></i>
+                <h1>GitLab Agentic <span>Auditor</span></h1>
+            </div>
+            <p class="subtitle">Agente Autónomo de Auditoría de Código y Resolución de Incidencias</p>
+            <div class="tech-badges">
+                <span class="badge badge-gemini"><i class="fa-solid fa-brain"></i> Gemini 3.5 Flash</span>
+                <span class="badge badge-mcp"><i class="fa-solid fa-plug"></i> Partner MCP Server</span>
+                <span class="badge badge-track"><i class="fa-brands fa-gitlab"></i> GitLab Track</span>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <div class="layout-grid">
+            
+            <!-- PANEL DE CONFIGURACIÓN -->
+            <section class="card config-panel" id="config-card">
+                <h2><i class="fa-solid fa-sliders"></i> Configuración de la Tarea</h2>
+                <form id="audit-form">
+                    <div class="form-group">
+                        <label for="gitlab-token">
+                            <i class="fa-solid fa-key"></i> GitLab Personal Access Token
+                        </label>
+                        <input type="password" id="gitlab-token" required placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" autocomplete="current-password">
+                        <small>Tu token no se almacena en el servidor y solo se usa para las peticiones de esta sesión.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gitlab-project">
+                            <i class="fa-solid fa-folder-tree"></i> GitLab Project ID o Ruta
+                        </label>
+                        <input type="text" id="gitlab-project" required placeholder="ej: 12345678 o gitlab-org/gitlab">
+                        <small>Puedes ingresar el ID numérico del proyecto o su ruta grupo/nombre.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-type">
+                            <i class="fa-solid fa-clipboard-list"></i> Tipo de Análisis / Tarea
+                        </label>
+                        <select id="task-type">
+                            <option value="audit" selected>🔍 Auditoría Técnica Completa</option>
+                            <option value="security">🔒 Análisis de Seguridad y Secrets</option>
+                            <option value="resolve-issue">🐛 Resolver Incidencia (Issue)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="git-ref">
+                            <i class="fa-solid fa-code-branch"></i> Rama / Ref de Git (Opcional)
+                        </label>
+                        <input type="text" id="git-ref" placeholder="ej: develop, main o un hash">
+                        <small>La rama o referencia de git para analizar. Por defecto es la rama principal.</small>
+                    </div>
+
+                    <div class="form-group hidden" id="issue-group">
+                        <label for="issue-iid">
+                            <i class="fa-solid fa-circle-dot"></i> Issue IID (ID Interno)
+                        </label>
+                        <input type="number" id="issue-iid" placeholder="ej: 42" min="1">
+                        <small>El número correlativo del issue (ej: #42) que deseas que resuelva el agente.</small>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="btn btn-primary">
+                        <span class="btn-text">Lanzar Agente Autónomo</span>
+                        <i class="fa-solid fa-robot pulse-icon"></i>
+                    </button>
+                </form>
+
+                <!-- STATS del agente (se muestran durante/después de la ejecución) -->
+                <div class="agent-stats hidden" id="agent-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-steps">0</span>
+                        <span class="stat-label">Pasos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-tools">0</span>
+                        <span class="stat-label">Herramientas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-time">0s</span>
+                        <span class="stat-label">Tiempo</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TERMINAL DE LOGS EN VIVO -->
+            <section class="card terminal-panel">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="terminal-title">Consola del Agente (Partner MCP + Gemini 3.5)</span>
+                    <div class="terminal-status" id="agent-status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Inactivo</span>
+                    </div>
+                </div>
+                <div class="terminal-body" id="terminal-output">
+                    <div class="log-line system">
+                        <span class="log-prefix">[SISTEMA]</span> Listo para iniciar. Ingresa los datos y haz clic en "Lanzar Agente Autónomo" para ver la ejecución del bucle MCP en vivo.
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- REPORTE DE RESULTADOS (Oculto al inicio) -->
+        <section class="card report-panel hidden" id="report-card">
+            <div class="report-header">
+                <h2><i class="fa-solid fa-file-invoice"></i> Reporte del Agente</h2>
+                <div class="report-actions">
+                    <button class="btn btn-secondary" id="copy-report-btn">
+                        <i class="fa-solid fa-copy"></i> Copiar Markdown
+                    </button>
+                    <button class="btn btn-secondary" id="print-report-btn">
+                        <i class="fa-solid fa-print"></i> Imprimir / PDF
+                    </button>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="report-content markdown-body" id="report-output">
+                <!-- Aquí se renderiza el Markdown del reporte final -->
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Hackathon 2026 — "Building Agents for Real-World Challenges" — GitLab Partner Track</p>
+        <p class="footer-tech">Powered by <strong>Gemini 3.5 Flash</strong> · <strong>@structured-world/gitlab-mcp</strong> · <strong>Google Cloud Vertex AI</strong></p>
+    </footer>
+
+    <!-- JS de la aplicación -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "gitlab-agentic-auditor",
+  "version": "2.0.0",
+  "description": "Autonomous AI Agent for Code Auditing, Security Analysis & Issue Resolution — powered by Gemini 3.5 Flash & GitLab Partner MCP Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "hackathon",
+    "gemini",
+    "gitlab",
+    "mcp",
+    "agent",
+    "ai",
+    "audit",
+    "vertex-ai"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/vertexai": "^1.12.0",
+    "@google/genai": "^2.8.0",
+    "@google/generative-ai": "^0.24.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@structured-world/gitlab-mcp": "^7.7.0",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0",
+    "zod": "^3.24.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
