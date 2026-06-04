@@ -305,4 +305,14 @@ async function runGitLabAgent({ token, projectId, taskType, issueIid, ref }, log
     }
 }
 
-module.exports = { runGitLabAgent };
+module.exports = { 
+    runGitLabAgent,
+    // Exported for testing
+    _internal: {
+        convertMcpSchemaToGemini,
+        mcpToolsToGemini,
+        callPartnerMcp,
+        discoverTools,
+        createMcpClient
+    }
+};
