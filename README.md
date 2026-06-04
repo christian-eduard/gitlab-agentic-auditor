@@ -5,6 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Partner Track](https://img.shields.io/badge/Partner-GitLab-orange.svg)](https://about.gitlab.com/)
 [![Gemini 3.5](https://img.shields.io/badge/Model-Gemini%203.5%20Flash-blue.svg)](https://cloud.google.com/vertex-ai)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://gitlab-agentic-auditor-774708549531.us-central1.run.app)
+
+> **🌐 Live Demo:** https://gitlab-agentic-auditor-774708549531.us-central1.run.app
 
 ---
 
